@@ -252,6 +252,26 @@ where
             .push(Box::new(ServiceFactoryWrapper::new(factory)));
         self
     }
+    
+    /// Register many HTTP service.
+    ///
+    /// Http service is any type that implements `HttpServiceFactory` trait.
+    ///
+    /// Actix Web provides several services implementations:
+    ///
+    /// * *Resource* is an entry in resource table which corresponds to requested URL.
+    /// * *Scope* is a set of resources with common root path.
+    /// * "StaticFiles" is a service for static files support
+    pub fn many_services<F>(mut self, factories: Vec<F>) -> Self
+    where
+        F: HttpServiceFactory + 'static,
+    {
+        for factory in factories {
+            self.services
+            .push(Box::new(ServiceFactoryWrapper::new(factory)));
+        }
+        self
+    }
 
     /// Default service to be used if no matching resource could be found.
     ///
